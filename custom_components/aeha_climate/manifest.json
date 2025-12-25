@@ -1,0 +1,12 @@
+{
+  "domain": "aeha_climate",
+  "name": "AEHA Custom Climate",
+  "codeowners": ["@Infinitte"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/Infinitte/aeha_climate",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/Infinitte/aeha_climate/issues",
+  "requirements": [],
+  "version": "0.0.1"
+}
