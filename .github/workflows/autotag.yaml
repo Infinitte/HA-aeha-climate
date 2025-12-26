@@ -20,15 +20,15 @@ jobs:
       - name: Get version from JSON
         id: get_version
         run: |
-          VERSION=$(jq -r '.version' custom_components/aeha_climate/manifest.json)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          if [[ "$VERSION" =~ [a-zA-Z] ]]; then
+          .version=$(jq -r '.version' custom_components/aeha_climate/manifest.json)
+          echo "VERSION=$.version" >> $GITHUB_ENV
+          echo "version=$.version" >> $GITHUB_OUTPUT
+          if [[ "$.version" =~ [a-zA-Z] ]]; then
             echo "IS_PRE_RELEASE=true" >> $GITHUB_ENV
             echo "Modo detectado: Pre-release (Beta)"
           else
             echo "IS_PRE_RELEASE=false" >> $GITHUB_ENV
-            echo "Modo detectado: Versión Estable"
+            echo "Modo detectado: Stable Version"
           fi
 
       - name: Create GitHub Release
