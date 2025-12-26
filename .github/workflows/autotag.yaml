@@ -1,4 +1,4 @@
-name: Create Tag on Version Change
+name: Create Tag an Release
 
 on:
   push:
@@ -23,17 +23,21 @@ jobs:
           VERSION=$(jq -r '.version' custom_components/aeha_climate/manifest.json)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Create Tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Verificamos si el tag ya existe para evitar duplicados
-          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
-            echo "El tag v${{ env.VERSION }} ya existe. Saltando..."
+          if [[ "$VERSION" =~ [a-zA-Z] ]]; then
+            echo "IS_PRE_RELEASE=true" >> $GITHUB_ENV
+            echo "Modo detectado: Pre-release (Beta)"
           else
-            echo "Creando tag v${{ env.VERSION }}"
-            git tag "v${{ env.VERSION }}"
-            git push origin "v${{ env.VERSION }}"
+            echo "IS_PRE_RELEASE=false" >> $GITHUB_ENV
+            echo "Modo detectado: Versión Estable"
           fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          prerelease: ${{ env.IS_PRE_RELEASE }}
+          generate_release_notes: true
+          fail_on_unmatched_files: false 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
