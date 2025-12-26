@@ -41,13 +41,6 @@ jobs:
           fail_on_unmatched_files: false 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: "Adjust version number"
-        shell: "bash"
-        run: |
-          yq -i -o json '.version="${{ github.event.release.tag_name }}"' \
-            "${{ github.workspace }}/custom_components/aeha_climate/manifest.json"
-
 
       - name: "ZIP the integration directory"
         shell: "bash"
