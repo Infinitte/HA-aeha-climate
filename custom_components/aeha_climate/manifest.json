@@ -8,5 +8,5 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/Infinitte/HA-aeha-climate/issues",
   "requirements": [],
-  "version": "0.0.6b6"
+  "version": "0.0.7"
 }
