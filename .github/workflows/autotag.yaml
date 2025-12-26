@@ -20,10 +20,10 @@ jobs:
       - name: Get version from JSON
         id: get_version
         run: |
-          .version=$(jq -r '.version' custom_components/aeha_climate/manifest.json)
-          echo "VERSION=$.version" >> $GITHUB_ENV
-          echo "version=$.version" >> $GITHUB_OUTPUT
-          if [[ "$.version" =~ [a-zA-Z] ]]; then
+          VERSION=$(jq -r '.version' custom_components/aeha_climate/manifest.json)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          if [[ "$VERSION" =~ [a-zA-Z] ]]; then
             echo "IS_PRE_RELEASE=true" >> $GITHUB_ENV
             echo "Modo detectado: Pre-release (Beta)"
           else
@@ -41,6 +41,13 @@ jobs:
           fail_on_unmatched_files: false 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: "Adjust version number"
+        shell: "bash"
+        run: |
+          yq -i -o json '.version="${{ github.event.release.tag_name }}"' \
+            "${{ github.workspace }}/custom_components/aeha_climate/manifest.json"
+
 
       - name: "ZIP the integration directory"
         shell: "bash"
@@ -52,3 +59,4 @@ jobs:
         uses: softprops/action-gh-release@v2.5.0
         with:
           files: ${{ github.workspace }}/custom_components/aeha_climate/aeha_climate.zip
+          tag_name: ${{ env.VERSION }}
