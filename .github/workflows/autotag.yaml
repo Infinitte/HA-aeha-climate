@@ -42,6 +42,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "Wait for 10 seconds"
+        run: sleep 10s
+        shell: bash
+
       - name: "ZIP the integration directory"
         shell: "bash"
         run: |
